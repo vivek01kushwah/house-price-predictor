@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Home, TrendingUp, BarChart3, IndianRupee } from 'lucide-react';
+import { Home, IndianRupee } from 'lucide-react';
+
+// ✅ Backend URL from .env
+const API_URL = process.env.REACT_APP_API_URL;
 
 export default function HousePricePrediction() {
   const [formData, setFormData] = useState({
@@ -13,9 +16,9 @@ export default function HousePricePrediction() {
   const [prediction, setPrediction] = useState(null);
   const [showResults, setShowResults] = useState(false);
 
-  // Fetch locations from backend
+  // ✅ Fetch locations from backend
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/locations")
+    fetch(`${API_URL}/locations`)
       .then(res => res.json())
       .then(data => {
         setLocations(data.locations);
@@ -32,7 +35,7 @@ export default function HousePricePrediction() {
     });
   };
 
-  // Predict Price
+  // ✅ Predict Price (Connected to Render backend)
   const predictPrice = async () => {
     if (!formData.sqft || !formData.bedrooms || !formData.bathrooms || !formData.location) {
       alert("Please fill all fields.");
@@ -40,21 +43,23 @@ export default function HousePricePrediction() {
     }
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/predict", {
+      const response = await fetch(`${API_URL}/predict`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData)
       });
 
       const data = await response.json();
+      console.log("Prediction Response:", data);
+
       setPrediction({
-        price: data.price.toFixed(0),
-        confidence: data.confidence.toFixed(1),
-        r2Score: data.r2Score.toFixed(3),
-        mse: data.mse.toFixed(0),
+        price: data.price?.toFixed(0) || 0,
+        confidence: data.confidence?.toFixed(1) || 0,
+        r2Score: data.r2Score?.toFixed(3) || 0,
+        mse: data.mse?.toFixed(0) || 0,
         priceRange: {
-          low: data.priceRange.low.toFixed(0),
-          high: data.priceRange.high.toFixed(0)
+          low: data.priceRange?.low?.toFixed(0) || 0,
+          high: data.priceRange?.high?.toFixed(0) || 0
         }
       });
 
@@ -107,7 +112,7 @@ export default function HousePricePrediction() {
                 className="w-full px-4 py-3 border rounded-lg"
               />
 
-              {/* BHK */}
+              {/* Bedrooms */}
               <input
                 type="number"
                 name="bedrooms"
@@ -127,7 +132,7 @@ export default function HousePricePrediction() {
                 className="w-full px-4 py-3 border rounded-lg"
               />
 
-              {/* Location Dropdown */}
+              {/* Location */}
               <select
                 name="location"
                 value={formData.location}
