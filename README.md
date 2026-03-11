@@ -1,4 +1,4 @@
-# House Price Predictor (Bangalore)
+# House Price Predictor
 
 A full-stack Machine Learning project that predicts **Bangalore house prices** based on inputs like **location, total_sqft, BHK, bathrooms**.  
 It includes:
