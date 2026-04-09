@@ -189,7 +189,3 @@ Frontend runs at:
 - Deploy (Render/Heroku for backend + Netlify/Vercel for frontend)
 
 ---
-
-## License
-
-This project is for learning and demonstration purposes.
